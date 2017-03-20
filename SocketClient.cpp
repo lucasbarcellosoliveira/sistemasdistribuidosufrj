@@ -9,6 +9,7 @@
 
 #define PORTNUMBER 777
 #define MAXDELTA 10
+#define BUFFERSIZE 8
 
 using namespace std;
 
@@ -35,7 +36,7 @@ int main(){
 		delta+=rand()%MAXDELTA+1; //pseudo-randomly picks a number smaller than or equal to MAXDELTA and bigger than or equal to 1
 		snumber=to_string(delta); //converts int delta to string snumber
 		cout<<"Sending number "<<delta<<endl;
-		write(socketfd,snumber.c_str(),sizeof(snumber.c_str())); //sends number to server through socket
+		while(send(socketfd,snumber.c_str(),sizeof(snumber.c_str()))); //sends number to server through socket in a blocking manner
 	}
 	return 0;
 }
