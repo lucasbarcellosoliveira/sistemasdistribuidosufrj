@@ -17,7 +17,6 @@ bool isPrime(int n){ //checks if a number is prime
 }
 
 int main(){
-	int delta; //increment that will be made after each iteration
 	cout<<"Producer started."<<endl;
 	cout<<"How many numbers shall I generate, my good sir?"<<endl;
 	int ent; //stores the number of tests that will be generated and sent
@@ -28,6 +27,7 @@ int main(){
 	id=fork(); //child process created. Hereinafter, code is being executed by both process
 	if (id>0){ //checks if process executing this line is the parent process
 		close(pipeline[0]); //reading-end won't be used by parent process
+		int delta=0; //increment that will be made after each iteration
 		string snumber;
 		for(int i=0;i<ent;i++){
 			delta+=rand()%MAXDELTA+1; //pseudo-randomly picks a number smaller than or equal to MAXDELTA and bigger than or equal to 1
