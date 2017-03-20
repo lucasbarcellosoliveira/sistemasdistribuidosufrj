@@ -6,4 +6,4 @@ Assignment concerning "Distributed Systems" subject in Computer and Information 
 
 Made on Scientific Linux 7.3 (Everything)!
 
-Pipes.cpp must be built using C++11, as in " g++ -std=c++11 Pipes.cpp -o Pipes "
+Pipes.cpp, SocketServer.cpp and SocketClient.cpp must be built with C++11 support enabled, as in " g++ -std=c++11 Pipes.cpp -o Pipes "
