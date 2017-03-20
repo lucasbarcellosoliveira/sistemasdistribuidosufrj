@@ -23,14 +23,14 @@ int main(){
 	cout<<"Socket ready."<<endl;
 	listen(socketfd, 1); //sets maximum number of conecctions to 1
 	cout<<"Waiting for connection..."<<endl;
-	accept(socketfd, (struct sockaddr*)&client, (socklen_t*)sizeof(client)); //blocking wait until client asks for connection
+	while(accept(socketfd, (struct sockaddr*)&client, (socklen_t*)sizeof(client))); //blocking wait until client asks for connection
 	cout<<"Connected!"<<endl;
 	char snumber[BUFFERSIZE];
-	while(!read(socketfd,snumber,BUFFERSIZE)); //blocking wait until successfully receives a char snumber
+	while(recv(socketfd,snumber,BUFFERSIZE)); //blocking wait until successfully receives a char snumber
 	int checknumber=stoi(snumber); //converts to int checknumber
 	cout<<"I received from client: "<<checknumber<<endl;
 	while (checknumber>0){ //until server receives number 0 from client
-		while(!read(socketfd,snumber,BUFFERSIZE)); //blocking wait until next number is received
+		while(recv(socketfd,snumber,BUFFERSIZE)); //blocking wait until next number is received
 		checknumber=stoi(snumber); //converts new number from char to int
 		cout<<"I received from client: "<<checknumber<<endl;
 	}
