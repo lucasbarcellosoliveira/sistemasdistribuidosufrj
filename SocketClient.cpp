@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+//#include <arpa/inet.h>
 #include <cstdlib>
 #include <ctime>
 #include <string>
@@ -19,6 +20,7 @@ int main(){
 	struct sockaddr_in server; //declares structs that will describe server's address
 	server.sin_family=AF_INET; //sets family to mandatory AF_INET
 	server.sin_addr.s_addr=0; //INADDR_ANY sets server's address to any
+	//inet_aton("146.164.69.201",&server.sin_addr); //stores IP in in_addr struct
 	cout<<"Reaching IP adress: "<<server.sin_addr.s_addr<<endl;
 	server.sin_port=PORTNUMBER; //sets server's port to defined portnumber
 	cout<<"Using port: "<<server.sin_port<<endl;
