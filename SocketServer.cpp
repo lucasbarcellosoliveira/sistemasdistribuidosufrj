@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <cstring>
 
-#define PORTNUMBER 777
+#define PORTNUMBER 50000
 #define BUFFERSIZE 8
 
 using namespace std;
@@ -25,7 +25,7 @@ int main(){
 	cout<<"Socket ready."<<endl;
 	listen(socketfd, 1); //sets maximum number of conecctions to 1
 	cout<<"Waiting for connection..."<<endl;
-	while(accept(socketfd, (struct sockaddr*)&client, (socklen_t*)sizeof(client))); //blocking wait until client asks for connection
+	while(accept(socketfd, (struct sockaddr*)&client, (socklen_t*)sizeof(client))<0); //blocking wait until client asks for connection
 	cout<<"Connected!"<<endl;
 	char snumber[BUFFERSIZE]; //declares buffer
 	//memset(snumber,0,BUFFERSIZE); //used to initialize buffer with zeros
