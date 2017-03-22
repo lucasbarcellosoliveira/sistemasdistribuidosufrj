@@ -54,8 +54,6 @@ int main(){
 	cout<<"I received from client: "<<checknumber<<endl;
 	string response;
 	while (checknumber!=0){ //until server receives number 0 from client
-		checknumber=stoi(snumber); //converts new number from char to int
-		cout<<"I received from client: "<<checknumber<<endl;
 		if (checknumber==1){
 			cout<<"Telling client that 1 is not prime nor composite..."<<endl;
 			response=to_string(0); //0 means 'not prime nor composite'
@@ -74,6 +72,8 @@ int main(){
 			}
 		//memset(snumber,0,BUFFERSIZE); //used to initialize buffer with zeros
 		recv(newsocketfd,snumber,BUFFERSIZE,0); //blocking wait until next number is received
+		checknumber=stoi(snumber); //converts new number from char to int
+		cout<<"I received from client: "<<checknumber<<endl;
 	}
 	cout<<"Closing socket connection..."<<endl;
 	close(newsocketfd); //closes both sides of connection, differently form shutdown()
