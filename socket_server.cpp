@@ -35,7 +35,7 @@ int main(){
 	//inet_aton("192.168.122.1",&server.sin_addr); //stores IP in in_addr struct
 	server.sin_port=htons(PORTNUMBER); //sets server's port to defined portnumber
 	cout<<"My IP adress is: "<<server.sin_addr.s_addr<<endl;
-	cout<<"Use port: "<<server.sin_port<<endl;
+	cout<<"Use port: "<<PORTNUMBER<<endl;
 
 	if (bind(socketfd, (struct sockaddr*)&server, sizeof(server)) < 0) error("Erro no bind()"); //binds socket referred in file descriptor socketfd to server's adress
 	cout<<"Socket ready."<<endl;
