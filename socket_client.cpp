@@ -23,7 +23,7 @@ int main(){
 	//inet_aton("192.168.122.1",&server.sin_addr); //stores IP in in_addr struct
 	cout<<"Reaching IP adress: "<<server.sin_addr.s_addr<<endl;
 	server.sin_port=htons(PORTNUMBER); //sets server's port to defined portnumber
-	cout<<"Using port: "<<server.sin_port<<endl;
+	cout<<"Using port: "<<PORTNUMBER<<endl;
 	cout<<"Attempting connection..."<<endl;
 	connect(socketfd,(struct sockaddr*)&server,sizeof(server)); //tries to contact server
 	cout<<"Connection succeded!"<<endl;
