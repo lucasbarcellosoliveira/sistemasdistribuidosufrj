@@ -1,9 +1,13 @@
-#include <iostream>
+#ifdef _WIN64
+#include <winsock.h>
+#else
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#endif
+#include <iostream>
 #include <cstring>
 
 #define PORTNUMBER 4999
@@ -30,6 +34,10 @@ int main() {
     socklen_t client_size = sizeof (client);
     char snumber[BUFFERSIZE]; //declares buffer
     string response;
+    #ifdef _WIN64
+    WSADATA wsaData;
+    WSAStartup(0x0202, &wsaData);
+    #endif
     /*________________________________________________________________________*/
 
 
@@ -105,8 +113,14 @@ int main() {
 
     /*_____________CLOSE CONNECTION AND TERMINATE THE PROCESS_________________*/
     cout << "Closing socket connection..." << endl;
+    #ifdef _WIN64
+    closesocket(newsocketfd);
+    closesocket(socketfd);
+    WSACleanup();
+    #else
     close(newsocketfd); //closes both sides of connection, differently form shutdown()
     close(socketfd);
+    #endif
     cout << "Connection ended. Bye!" << endl;
     return 0;
     /*________________________________________________________________________*/

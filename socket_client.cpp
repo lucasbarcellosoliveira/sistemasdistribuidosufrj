@@ -1,12 +1,16 @@
-#include <iostream>
+#ifdef _WIN64
+#include <winsock.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+#endif
+#include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <string>
-#include <unistd.h>
 
 #define PORTNUMBER 4999
 #define MAXDELTA 10
@@ -23,6 +27,10 @@ int main() {
 	string snumber;
 	srand (time(NULL));char
 	response[BUFFERSIZE];
+	#ifdef _WIN64
+	WSADATA wsaData;
+	WSAStartup(0x0202, &wsaData);
+	#endif
 	/*________________________________________________________________________*/
 
 	/*______________________________OPEN SOCKET_______________________________*/
@@ -72,7 +80,12 @@ int main() {
 	snumber = to_string(0); //sends 0 to terminate the process
 	send(socketfd, snumber.c_str(), sizeof(snumber.c_str()), 0); //sends 0 to signal all numbers were transmitted
 	cout << "Ending communication with server..." << endl;
+	#ifdef _WIN64
+	closesocket(socketfd);
+	WSACleanup();
+	#else
 	close(socketfd); //closes socket bidirectionally
+	#endif
 	cout << "Connection ended. Bye!" << endl;
 	return 0;
 	/*________________________________________________________________________*/
