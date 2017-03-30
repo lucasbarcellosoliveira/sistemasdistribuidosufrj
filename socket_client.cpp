@@ -25,8 +25,8 @@ int main() {
 	int n; //will store number of tests to be made
 	int delta = 0; //increment that will take place after each iteration
 	string snumber;
-	srand (time(NULL));char
-	response[BUFFERSIZE];
+	srand (time(NULL));
+	char response[BUFFERSIZE];
 	#ifdef _WIN64
 	WSADATA wsaData;
 	WSAStartup(0x0202, &wsaData);
