@@ -15,7 +15,7 @@ using namespace std;
 
 sem_t full, empty;  //semaphores declaration
 pthread_mutex_t bufferbusy, finish; //mutex declaration
-long numbers[N];    //buffer declaration
+long *numbers;    //buffer declaration
 int finished = 0;   //flag declaration
 int M = 0;  //counter declaration
 
@@ -87,6 +87,7 @@ void *consumer(){
 int main (int argc, char *argv[]){
     /*___________________________________VARIABLES___________________________________*/
     srand (time(NULL)); //seed to measure the execution time
+    numbers = new long[N];  //init the buffer
     pthread_mutex_init(&bufferbusy,0);  //init the bufferbusy mutex with 0
     pthread_mutex_init(&finish,0);  //init the finish mutex with 0
     sem_init(&full, 0, 0); //init the semaphore full(second parameter means that it is only visible by this process)
@@ -105,7 +106,7 @@ int main (int argc, char *argv[]){
     clock_t tStart = clock(), tFinish;  //start timer
 
 
-    for(t=0; t<Np; t++){ //for each Np
+    for(t=0; t<Np; t++){ //for each producer
         rc = pthread_create(&threads[t], NULL, producer, NULL); //creates a producer thread
         if (rc){    //handle error on thread creating
             cout << "ERROR; return code from pthread_create() is" << rc << endl;
@@ -113,7 +114,7 @@ int main (int argc, char *argv[]){
         }
     }
 
-    for(t=Np; t<Np+Nc; t++){ //for each Nc
+    for(t=Np; t<Np+Nc; t++){ //for each consumer
         rc = pthread_create(&threads[t], NULL, consumer, NULL); //create a consumer thread
         if (rc){    //handle error on thread creating
             cout << "ERROR; return code from pthread_create() is" << rc << endl;
@@ -130,6 +131,8 @@ int main (int argc, char *argv[]){
     sem_destroy(&empty);    //semaphore destructor
     pthread_mutex_destroy(&bufferbusy); //mutex destructor
     pthread_mutex_destroy(&finish); //mutex destructor
+
+    delete numbers; //frees space taken by buffer in heap
 
     cout << "Done!" << endl;
     cout << "Execution time:" << (double)(tFinish - tStart)/CLOCKS_PER_SEC << endl;
