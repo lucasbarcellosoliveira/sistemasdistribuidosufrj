@@ -1,4 +1,4 @@
-//g++ -fpermissive -pthread -w -std=c++11 somador.cpp -o somador
+//g++ -fpermissive -pthread -w -std=c++11 2_prodcons.cpp -o 2_prodcons
 #include <pthread.h>
 #include <iostream>
 #include <atomic>
