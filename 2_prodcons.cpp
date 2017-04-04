@@ -43,7 +43,7 @@ void *producer(){
         pthread_mutex_unlock(&bufferbusy);  //unlock bufferbusy mutex
         sem_post(&full);    //SIGNAL FULL
 
-        if (Nc>=Np && finished>=Nc)
+        if (Nc>=Np && finished>=Nc) //if there are many consumers, wait for all of them to exit first
             break;
     }
 
@@ -79,7 +79,7 @@ void *consumer(){
         //else
             //cout << data << " is composite!" << endl;
 
-        if (Np>Nc && finished>=Np)
+        if (Np>Nc && finished>=Np) //if there are many producers, wait for all of them to exit
             break;
     }
 
