@@ -129,8 +129,8 @@ int main (int argc, char *argv[]){
         }
     }
 
-    while (finished < Np+Nc);   //blocking wait until all threads have finished
-    
+    for(t=0;t<Np+Nc;t++)
+        pthread_join(threads[t], NULL); //blocking wait until all threads have finished
 
     tFinish = clock();  //stop timer
 
