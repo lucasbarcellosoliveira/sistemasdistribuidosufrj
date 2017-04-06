@@ -12,6 +12,7 @@ using namespace std;
 #define N 2
 #define Np 1
 #define Nc 8
+#define DIF 7
 
 sem_t full, empty;  //semaphores declaration
 pthread_mutex_t bufferbusy, finish; //mutex declaration
@@ -29,7 +30,7 @@ bool isPrime(long n){
 
 void *producer(){
     /*waits empty semaphore > 1 then puts a number in the buffer (with exclusive access)*/
-    while(Nc-Np>=8 || M<10000){ //if the amount of consumers is much larger, goes indefinitely until break happens
+    while(Nc-Np>=DIF || M<10000){ //if the amount of consumers is much larger, goes indefinitely until break happens
         sem_wait(&empty);   //WAIT EMPTY
         pthread_mutex_lock(&bufferbusy);    //locks bufferbusy mutex to ensure exclusive access
 
@@ -43,7 +44,7 @@ void *producer(){
         pthread_mutex_unlock(&bufferbusy);  //unlock bufferbusy mutex
         sem_post(&full);    //SIGNAL FULL
 
-        if (Nc-Np>=8 && finished>=Nc) //if there are many consumers, wait for all of them to exit first
+        if (Nc-Np>=DIF && finished>=Nc) //if there are many consumers, wait for all of them to exit first
             break;
     }
 
@@ -58,7 +59,7 @@ void *consumer(){
     /*waits full semaphore > 1 then pick up a number from the buffer (with exclusive access) to check if it's prime*/
     long data;  //store a buffer number
 
-    while(Np-Nc>=8 || M<10000){ //if the amount of producers is much larger, goes indefinitely until break happens 
+    while(Np-Nc>=DIF || M<10000){ //if the amount of producers is much larger, goes indefinitely until break happens 
         sem_wait(&full);    // WAIT FULL
         pthread_mutex_lock(&bufferbusy);    //locks bufferbusy mutex to ensure exclusive access
 
@@ -79,7 +80,7 @@ void *consumer(){
         //else
             //cout << data << " is composite!" << endl;
 
-        if (Np-Nc>=8 && finished>=Np) //if there are many producers, wait for all of them to exit
+        if (Np-Nc>=DIF && finished>=Np) //if there are many producers, wait for all of them to exit
             break;
     }
 
