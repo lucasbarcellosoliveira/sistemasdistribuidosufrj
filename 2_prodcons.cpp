@@ -46,7 +46,7 @@ void *producer(){
         pthread_mutex_unlock(&buffer);    //signal(mutex)
         sem_post(&full);    //signal(full)
     }
-    sem_post(&empty);
+    sem_post(&empty);    //it's to allow other threads exiting
     pthread_exit(NULL);    //exit thread
 }
 
@@ -69,11 +69,11 @@ void *consumer(){
             }
 
         pthread_mutex_unlock(&buffer);    //signal(mutex)
-        sem_post(&empty);    //signa(empty)
+        sem_post(&empty);    //signal(empty)
 
         if(isPrime(data));    //check if data is prime or consume resource
     }
-    sem_post(&full);
+    sem_post(&full);    //it's to allow other threads exiting
     pthread_exit(NULL);    //exit thread
 }
 
