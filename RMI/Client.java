@@ -37,7 +37,7 @@ public class Client {
         //array=op.logb(array, b);
         finish=System.nanoTime();
         //System.out.println("Received array: "+Arrays.toString(array));
-        System.out.println("Time elapsed (ns): "+(finish-start)/K);
+        System.out.println("Time elapsed (ns): "+(finish-start));
         float[] ansArray=new float[N];
         for (i=0;i<K;i++)
             System.arraycopy(threads[i].subarray, 0, ansArray, i*N/K, N/K);
