@@ -34,6 +34,7 @@
 #include <xmlrpc-c/base.h>
 #include <xmlrpc-c/server.h>
 #include <xmlrpc-c/server_abyss.h>
+#include <math.h>
 
 #include "config.h"  /* information about this build environment */
 
@@ -45,26 +46,26 @@
 
 
 static xmlrpc_value *
-sample_add(xmlrpc_env *   const envP,
+logb(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
 
-    xmlrpc_int32 x, y, z;
+    xmlrpc_double a, b, z;
 
     /* Parse our argument array. */
-    xmlrpc_decompose_value(envP, paramArrayP, "(ii)", &x, &y);
+    xmlrpc_decompose_value(envP, paramArrayP, "(ii)", &a, &b);
     if (envP->fault_occurred)
         return NULL;
 
     /* Add our two numbers. */
-    z = x + y;
+    z = log(a)/log(b);
 
     /* Sometimes, make it look hard (so client can see what it's like
        to do an RPC that takes a while).
     */
-    if (y == 1)
-        SLEEP(3);
+//    if (y == 1)
+//        SLEEP(3);
 
     /* Return our result. */
     return xmlrpc_build_value(envP, "i", z);
@@ -77,8 +78,8 @@ main(int           const argc,
      const char ** const argv) {
 
     struct xmlrpc_method_info3 const methodInfo = {
-        /* .methodName     = */ "sample.add",
-        /* .methodFunction = */ &sample_add,
+        /* .methodName     = */ "logb",
+        /* .methodFunction = */ &logb,
     };
     xmlrpc_server_abyss_parms serverparm;
     xmlrpc_registry * registryP;

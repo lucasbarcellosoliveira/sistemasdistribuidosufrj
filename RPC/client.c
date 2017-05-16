@@ -37,7 +37,7 @@ main(int           const argc,
     xmlrpc_value * resultP;
     xmlrpc_int32 sum;
     const char * const serverUrl = "http://localhost:8080/RPC2";
-    const char * const methodName = "sample.add";
+    const char * const methodName = "logb";
 
     if (argc-1 > 0) {
         fprintf(stderr, "This program has no arguments\n");
@@ -56,13 +56,13 @@ main(int           const argc,
 
     /* Make the remote procedure call */
     resultP = xmlrpc_client_call(&env, serverUrl, methodName,
-                                 "(ii)", (xmlrpc_int32) 10, (xmlrpc_int32) 1);
+                                 "(ii)", (xmlrpc_double) 10, (xmlrpc_double) 10);
     dieIfFaultOccurred(&env);
     
     /* Get our sum and print it out. */
-    xmlrpc_read_int(&env, resultP, &sum);
+    xmlrpc_read_int(&env, resultP, &log);
     dieIfFaultOccurred(&env);
-    printf("The sum is %d\n", sum);
+    printf("The sum is %d\n", log);
     
     /* Dispose of our result value. */
     xmlrpc_DECREF(resultP);
