@@ -15,8 +15,6 @@
 
 #include <math.h>
 
-#include "config.h"  /* information about this build environment */
-
 #ifdef _WIN32
   #define SLEEP(seconds) SleepEx(seconds * 1000, 1);
 #else
@@ -30,18 +28,26 @@ log_b(xmlrpc_env *   const envP,
            void *         const serverInfo,
            void *         const channelInfo) {
 
-    xmlrpc_double a, b, z;
+    xmlrpc_double b;
+    xmlrpc_value* myarray;
+    xmlrpc_value * ElementP;
 
     /* Parse our argument array. */
-    xmlrpc_decompose_value(envP, paramArrayP, "(dd)", &a, &b);
+    xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &b);
     if (envP->fault_occurred)
         return NULL;
 
+    // for (int i=0; i<xmlrpc_array_size(envP, myarray); i++)   {
+    //      xmlrpc_array_read_item(envP, myarray, i, &ElementP);
+    //      xmlrpc_read_double(envP, ElementP, &z);
+    //      xmlrpc_DECREF(ElementP);
+    //  }
+
     /* Do our operation */
-    z = log(a)/log(b);
+    // z=myarray;
 
     /* Return our result. */
-    return xmlrpc_build_value(envP, "d", z);
+    return xmlrpc_build_value(envP, "A", myarray);
 }
 //=============================================================================//
 

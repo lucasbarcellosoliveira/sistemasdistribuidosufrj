@@ -1,10 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #include <xmlrpc-c/base.h>
 #include <xmlrpc-c/client.h>
-
-#include "config.h"  /* information about this build environment */
 
 #define NAME "Xmlrpc-c Test Client"
 #define VERSION "1.0"
@@ -28,7 +27,11 @@ main(double           const argc,
 
     xmlrpc_env env;
     xmlrpc_value * resultP;
-    xmlrpc_double log;
+    xmlrpc_value * myarray;
+    xmlrpc_value * itemP;
+    xmlrpc_value * log;
+    xmlrpc_double var;
+    double number;
     const char * const serverUrl = "http://localhost:8080/RPC2";
     const char * const methodName = "log_b";
 
@@ -48,14 +51,23 @@ main(double           const argc,
            "to request a log \n", serverUrl, methodName);
 
     /* Make the remote procedure call */
+    myarray = xmlrpc_array_new(&env);
+    srand(time(NULL));
+    for (int i=0; i<3; i++){
+        number = rand()%100 + rand();
+        itemP = xmlrpc_double_new(&env, number);
+        xmlrpc_array_append_item(&env, myarray, itemP);
+        xmlrpc_DECREF(itemP);
+    }
     resultP = xmlrpc_client_call(&env, serverUrl, methodName,
-                                 "(dd)", (xmlrpc_double) 729, (xmlrpc_double) 9);
+                                 "(Ad)", (xmlrpc_value*) myarray, (xmlrpc_double) 10);
     dieIfFaultOccurred(&env);
     
     /* Get our log and print it out. */
-    xmlrpc_read_double(&env, resultP, &log);
+    xmlrpc_array_read_item(&env, resultP, 0, &log);
+    xmlrpc_read_double(&env, log, &var);
     dieIfFaultOccurred(&env);
-    printf("The log is %F\n", log);
+    printf("The log is %F\n", var);
     
     /* Dispose of our result value. */
     xmlrpc_DECREF(resultP);
