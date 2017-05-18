@@ -1,25 +1,3 @@
-/* A simple standalone XML-RPC server program written in C. */
-
-/* This server knows one RPC class (besides the system classes):
-   "sample.add".
-
-   The program takes one argument: the HTTP port number on which the server
-   is to accept connections, in decimal.
-
-   You can use the example program 'xmlrpc_sample_add_client' to send an RPC
-   to this server.
-
-   Example:
-
-   $ ./xmlrpc_sample_add_server 8080&
-   $ ./xmlrpc_sample_add_client
-
-   For more fun, run client and server in separate terminals and turn on
-   tracing for each:
-
-   $ export XMLRPC_TRACE_XML=1
-*/
-
 #define WIN32_LEAN_AND_MEAN  /* required by xmlrpc-c/server_abyss.h */
 
 #include <stdlib.h>
@@ -34,6 +12,7 @@
 #include <xmlrpc-c/base.h>
 #include <xmlrpc-c/server.h>
 #include <xmlrpc-c/server_abyss.h>
+
 #include <math.h>
 
 #include "config.h"  /* information about this build environment */
@@ -43,10 +22,10 @@
 #else
   #define SLEEP(seconds) sleep(seconds);
 #endif
-
+//=============================================================================//
 
 static xmlrpc_value *
-logb(xmlrpc_env *   const envP,
+log_b(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -54,32 +33,25 @@ logb(xmlrpc_env *   const envP,
     xmlrpc_double a, b, z;
 
     /* Parse our argument array. */
-    xmlrpc_decompose_value(envP, paramArrayP, "(ii)", &a, &b);
+    xmlrpc_decompose_value(envP, paramArrayP, "(dd)", &a, &b);
     if (envP->fault_occurred)
         return NULL;
 
-    /* Add our two numbers. */
+    /* Do our operation */
     z = log(a)/log(b);
 
-    /* Sometimes, make it look hard (so client can see what it's like
-       to do an RPC that takes a while).
-    */
-//    if (y == 1)
-//        SLEEP(3);
-
     /* Return our result. */
-    return xmlrpc_build_value(envP, "i", z);
+    return xmlrpc_build_value(envP, "d", z);
 }
-
-
+//=============================================================================//
 
 int 
 main(int           const argc, 
      const char ** const argv) {
 
     struct xmlrpc_method_info3 const methodInfo = {
-        /* .methodName     = */ "logb",
-        /* .methodFunction = */ &logb,
+        /* .methodName     = */ "log_b",
+        /* .methodFunction = */ &log_b,
     };
     xmlrpc_server_abyss_parms serverparm;
     xmlrpc_registry * registryP;
@@ -124,6 +96,3 @@ main(int           const argc,
 
     return 0;
 }
-
-
-

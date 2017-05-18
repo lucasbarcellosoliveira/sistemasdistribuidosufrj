@@ -1,12 +1,3 @@
-/* A simple synchronous XML-RPC client program written in C, as an example of
-   an Xmlrpc-c client.  This invokes the sample.add procedure that the
-   Xmlrpc-c example xmlrpc_sample_add_server.c server provides.  I.e. it adds
-   two numbers together, the hard way.
-
-   This sends the RPC to the server running on the local system ("localhost"),
-   HTTP Port 8080.
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -18,6 +9,9 @@
 #define NAME "Xmlrpc-c Test Client"
 #define VERSION "1.0"
 
+#define N 30
+//=============================================================================//
+
 static void 
 dieIfFaultOccurred (xmlrpc_env * const envP) {
     if (envP->fault_occurred) {
@@ -26,18 +20,17 @@ dieIfFaultOccurred (xmlrpc_env * const envP) {
         exit(1);
     }
 }
-
-
+//=============================================================================//
 
 int 
-main(int           const argc, 
+main(double           const argc, 
      const char ** const argv) {
 
     xmlrpc_env env;
     xmlrpc_value * resultP;
-    xmlrpc_int32 sum;
+    xmlrpc_double log;
     const char * const serverUrl = "http://localhost:8080/RPC2";
-    const char * const methodName = "logb";
+    const char * const methodName = "log_b";
 
     if (argc-1 > 0) {
         fprintf(stderr, "This program has no arguments\n");
@@ -52,17 +45,17 @@ main(int           const argc,
     dieIfFaultOccurred(&env);
 
     printf("Making XMLRPC call to server url '%s' method '%s' "
-           "to request a sum\n", serverUrl, methodName);
+           "to request a log \n", serverUrl, methodName);
 
     /* Make the remote procedure call */
     resultP = xmlrpc_client_call(&env, serverUrl, methodName,
-                                 "(ii)", (xmlrpc_double) 10, (xmlrpc_double) 10);
+                                 "(dd)", (xmlrpc_double) 729, (xmlrpc_double) 9);
     dieIfFaultOccurred(&env);
     
-    /* Get our sum and print it out. */
-    xmlrpc_read_int(&env, resultP, &log);
+    /* Get our log and print it out. */
+    xmlrpc_read_double(&env, resultP, &log);
     dieIfFaultOccurred(&env);
-    printf("The sum is %d\n", log);
+    printf("The log is %F\n", log);
     
     /* Dispose of our result value. */
     xmlrpc_DECREF(resultP);
@@ -75,4 +68,3 @@ main(int           const argc,
 
     return 0;
 }
-
