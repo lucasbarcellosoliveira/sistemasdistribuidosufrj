@@ -29,22 +29,34 @@ log_b(xmlrpc_env *   const envP,
            void *         const channelInfo) {
 
     xmlrpc_double b;
-    xmlrpc_value* myarray;
-    xmlrpc_value * ElementP;
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    int size;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &b);
     if (envP->fault_occurred)
         return NULL;
 
-    // for (int i=0; i<xmlrpc_array_size(envP, myarray); i++)   {
-    //      xmlrpc_array_read_item(envP, myarray, i, &ElementP);
-    //      xmlrpc_read_double(envP, ElementP, &z);
-    //      xmlrpc_DECREF(ElementP);
-    //  }
+    size = xmlrpc_array_size(envP,myarray);
 
-    /* Do our operation */
-    // z=myarray;
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+    }
+
+
+    for (int i=0; i<size; i++){
+    	vector[i] = log(vector[i])/log(b);
+    	printf("%F",vector[i]);
+    }
+
+    //myarray = (xmlrpc_value *) vector;
 
     /* Return our result. */
     return xmlrpc_build_value(envP, "A", myarray);

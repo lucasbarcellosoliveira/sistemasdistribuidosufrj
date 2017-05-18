@@ -19,6 +19,12 @@ dieIfFaultOccurred (xmlrpc_env * const envP) {
         exit(1);
     }
 }
+
+double fRand(double fMin, double fMax)
+{
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
 //=============================================================================//
 
 int 
@@ -28,10 +34,11 @@ main(double           const argc,
     xmlrpc_env env;
     xmlrpc_value * resultP;
     xmlrpc_value * myarray;
-    xmlrpc_value * itemP;
+    xmlrpc_value * item;
     xmlrpc_value * log;
     xmlrpc_double var;
     double number;
+    srand(time(NULL));
     const char * const serverUrl = "http://localhost:8080/RPC2";
     const char * const methodName = "log_b";
 
@@ -47,28 +54,32 @@ main(double           const argc,
     xmlrpc_client_init2(&env, XMLRPC_CLIENT_NO_FLAGS, NAME, VERSION, NULL, 0);
     dieIfFaultOccurred(&env);
 
-    printf("Making XMLRPC call to server url '%s' method '%s' "
-           "to request a log \n", serverUrl, methodName);
+    printf("Making XMLRPC call to server url '%s' method '%s' \n"
+           , serverUrl, methodName);
+
+    /* Create random vector */
+    myarray = xmlrpc_array_new(&env);
+    
+    for (int i=0; i<10; i++){
+        number = fRand(0,100);
+        item = xmlrpc_double_new(&env, number);
+        xmlrpc_array_append_item(&env, myarray, item);
+        xmlrpc_DECREF(item);
+    }
 
     /* Make the remote procedure call */
-    myarray = xmlrpc_array_new(&env);
-    srand(time(NULL));
-    for (int i=0; i<3; i++){
-        number = rand()%100 + rand();
-        itemP = xmlrpc_double_new(&env, number);
-        xmlrpc_array_append_item(&env, myarray, itemP);
-        xmlrpc_DECREF(itemP);
-    }
     resultP = xmlrpc_client_call(&env, serverUrl, methodName,
                                  "(Ad)", (xmlrpc_value*) myarray, (xmlrpc_double) 10);
     dieIfFaultOccurred(&env);
     
     /* Get our log and print it out. */
-    xmlrpc_array_read_item(&env, resultP, 0, &log);
-    xmlrpc_read_double(&env, log, &var);
-    dieIfFaultOccurred(&env);
-    printf("The log is %F\n", var);
-    
+    for (int i=0; i<10; i++){
+        xmlrpc_array_read_item(&env, resultP, i, &log);
+        xmlrpc_read_double(&env, log, &var);
+        dieIfFaultOccurred(&env);
+        printf("%F\n", var);
+    }
+
     /* Dispose of our result value. */
     xmlrpc_DECREF(resultP);
 
