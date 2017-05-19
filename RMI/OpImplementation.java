@@ -7,7 +7,7 @@ public class OpImplementation extends UnicastRemoteObject implements Op{
 
     @Override
     public float[] logb (float[] a, float b) throws RemoteException{
-        System.out.println("Operation logb called for array "+Arrays.toString(a)+" and base "+b);
+        //System.out.println("Operation logb called for array "+Arrays.toString(a)+" and base "+b);
         for (int i=0;i<a.length;i++)
             a[i]=(float) (Math.log(a[i])/Math.log(b));
         //System.out.println("Operation completed. Returning array "+Arrays.toString(a));
