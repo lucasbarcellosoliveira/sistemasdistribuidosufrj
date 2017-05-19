@@ -9,8 +9,14 @@
 #define NAME "Xmlrpc-c Test Client"
 #define VERSION "1.0"
 
-#define N 10
-#define K 1
+#define N 10000
+#define K 4
+
+//=============================================================================//
+static double TimeSpecToSeconds(struct timespec* ts)
+{
+    return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
+}
 
 //=============================================================================//
 struct args_t{
@@ -44,13 +50,17 @@ rpcThread(void* arg){
     struct args_t *args = (struct args_t *)malloc(sizeof(struct args_t));
     args = arg;
 
-    /* Make the remote procedure call of first type functions */
-    // result = xmlrpc_client_call(&env, serverUrl, methodName,
-    //                              "(Ad)", (xmlrpc_value*) myarray, (xmlrpc_double) 2);
+    if (args->methodName == "logbx" || "sinx" || "powx"){
+	    /* Make the remote procedure call of first type functions */
+	    args->result = xmlrpc_client_call(&args->env, args->serverUrl, args->methodName,
+	                                 "(Ad)", (xmlrpc_value*) args->myarray, (xmlrpc_double) 2);
+	}
 
-    /* Make the remote procedure call of second type functions */
-    args->result = xmlrpc_client_call(&args->env, args->serverUrl, args->methodName,
-                                  "(A)", (xmlrpc_value*) args->myarray);//, (xmlrpc_double) 50);
+	else{
+	    /* Make the remote procedure call of second type functions */
+	    args->result = xmlrpc_client_call(&args->env, args->serverUrl, args->methodName,
+	                                  "(A)", (xmlrpc_value*) args->myarray);//, (xmlrpc_double) 50);
+	}
 }
 //=============================================================================//
 
@@ -58,6 +68,9 @@ int
 main(double           const argc, 
      const char ** const argv) {
 
+	clock_t startc, endc;
+	struct timespec startm, endm;
+	double elapsedSecondsM, elapsedSecondsC;
     pthread_t threads[K];
     xmlrpc_value * Element;
     xmlrpc_env env;
@@ -67,7 +80,7 @@ main(double           const argc,
     double number;
     srand(time(NULL));
     char * serverUrl = "http://localhost:8080/RPC2";
-    char * methodName = "sinx";
+    char * methodName = "powx";
     struct args_t args[K];
 
     if (argc-1 > 0) {
@@ -100,6 +113,9 @@ main(double           const argc,
     }
 
 
+//START CLOCK   
+    clock_gettime(CLOCK_MONOTONIC, &startm);
+    startc = clock();    
 //START CLOCK
     for (int i=0; i<K; i++){
         pthread_create(&threads[i], NULL, rpcThread, &args[i]);
@@ -109,21 +125,23 @@ main(double           const argc,
         pthread_join(threads[i], NULL);
     }
 
-    for (int i=0; i<K; i++){
-    	for (int k=0; k<N/K; k++){
-	    	xmlrpc_array_read_item(&env, args[i].result, k, &Element);
-	        xmlrpc_read_double(&env, Element, &var);
-	        printf("%F\n", var);
-    	}
-    }
+    // for (int i=0; i<K; i++){
+    // 	for (int k=0; k<N/K; k++){
+	   //  	xmlrpc_array_read_item(&env, args[i].result, k, &Element);
+	   //      xmlrpc_read_double(&env, Element, &var);
+	   //      printf("%F\n", var);
+    // 	}
+    // }
 //END CLOCK
-    // /* Make the remote procedure call of first type functions */
-    // // result = xmlrpc_client_call(&env, serverUrl, methodName,
-    // //                              "(Ad)", (xmlrpc_value*) myarray, (xmlrpc_double) 2);
+    clock_gettime(CLOCK_MONOTONIC, &endm);
+    endc = clock();
+//END CLOCK
 
-    // /* Make the remote procedure call of second type functions */
-    // result = xmlrpc_client_call(&env, serverUrl, methodName,
-    //                               "(A)", (xmlrpc_value*) myarray);//, (xmlrpc_double) 50);
+    elapsedSecondsC = (double)(endc - startc)/CLOCKS_PER_SEC;
+    elapsedSecondsM = TimeSpecToSeconds(&endm) - TimeSpecToSeconds(&startm);
+    printf("Time elapsed by MONOTONIC: %F\n", elapsedSecondsM);
+    printf("Time elapsed by CLOCK: %F\n", elapsedSecondsC);
+
 
     dieIfFaultOccurred(&env);
     
