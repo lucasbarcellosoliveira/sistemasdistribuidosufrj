@@ -23,7 +23,7 @@
 //=============================================================================//
 
 static xmlrpc_value *
-log_b(xmlrpc_env *   const envP,
+logbx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -32,6 +32,163 @@ log_b(xmlrpc_env *   const envP,
     xmlrpc_double * vector;
     xmlrpc_value * myarray;
     xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_value * rArray;
+    int size;
+
+    /* Parse our argument array. */
+    xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &b);
+    if (envP->fault_occurred)
+        return NULL;
+
+    size = xmlrpc_array_size(envP,myarray);
+
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+    rArray = xmlrpc_array_new(envP);
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	vector[i] = log(vector[i])/log(b);
+    	item = xmlrpc_double_new(envP, vector[i]);
+    	xmlrpc_array_append_item(envP, rArray, item);
+    }
+
+    /* Return our result. */
+    return xmlrpc_build_value(envP, "A", rArray);
+}
+//=============================================================================//
+
+static xmlrpc_value *
+sinx(xmlrpc_env *   const envP,
+           xmlrpc_value * const paramArrayP,
+           void *         const serverInfo,
+           void *         const channelInfo) {
+
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_value * rArray;
+    int size;
+
+    /* Parse our argument array. */
+    xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
+    if (envP->fault_occurred)
+        return NULL;
+
+    size = xmlrpc_array_size(envP,myarray);
+
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+    rArray = xmlrpc_array_new(envP);
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	vector[i] = sin(vector[i]);
+    	item = xmlrpc_double_new(envP, vector[i]);
+    	xmlrpc_array_append_item(envP, rArray, item);
+    }
+
+    /* Return our result. */
+    return xmlrpc_build_value(envP, "A", rArray);
+}
+//=============================================================================//
+
+static xmlrpc_value *
+powx(xmlrpc_env *   const envP,
+           xmlrpc_value * const paramArrayP,
+           void *         const serverInfo,
+           void *         const channelInfo) {
+
+    xmlrpc_double p;
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_value * rArray;
+    int size;
+
+    /* Parse our argument array. */
+    xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &p);
+    if (envP->fault_occurred)
+        return NULL;
+
+    size = xmlrpc_array_size(envP,myarray);
+
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+    rArray = xmlrpc_array_new(envP);
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	vector[i] = pow(vector[i],p);
+    	item = xmlrpc_double_new(envP, vector[i]);
+    	xmlrpc_array_append_item(envP, rArray, item);
+    }
+
+    /* Return our result. */
+    return xmlrpc_build_value(envP, "A", rArray);
+}
+//=============================================================================//
+
+static xmlrpc_value *
+sumx(xmlrpc_env *   const envP,
+           xmlrpc_value * const paramArrayP,
+           void *         const serverInfo,
+           void *         const channelInfo) {
+
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_double rDouble = 0;
+    int size;
+
+    /* Parse our argument array. */
+    xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
+    if (envP->fault_occurred)
+        return NULL;
+
+    size = xmlrpc_array_size(envP,myarray);
+
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	rDouble += vector[i];
+    }
+
+    /* Return our result. */
+    return xmlrpc_build_value(envP, "d", rDouble);
+}
+//=============================================================================//
+
+static xmlrpc_value *
+largerThanx(xmlrpc_env *   const envP,
+           xmlrpc_value * const paramArrayP,
+           void *         const serverInfo,
+           void *         const channelInfo) {
+
+	xmlrpc_double b;
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_double rDouble = 0;
     int size;
 
     /* Parse our argument array. */
@@ -48,18 +205,49 @@ log_b(xmlrpc_env *   const envP,
     for (int i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	if (vector[i]>b)
+    		rDouble ++;
     }
-
-
-    for (int i=0; i<size; i++){
-    	vector[i] = log(vector[i])/log(b);
-    	printf("%F",vector[i]);
-    }
-
-    //myarray = (xmlrpc_value *) vector;
 
     /* Return our result. */
-    return xmlrpc_build_value(envP, "A", myarray);
+    return xmlrpc_build_value(envP, "d", rDouble);
+}
+//=============================================================================//
+
+static xmlrpc_value *
+prodx(xmlrpc_env *   const envP,
+           xmlrpc_value * const paramArrayP,
+           void *         const serverInfo,
+           void *         const channelInfo) {
+
+    xmlrpc_double * vector;
+    xmlrpc_value * myarray;
+    xmlrpc_value * Element;
+    xmlrpc_value * item;
+    xmlrpc_double rDouble = 1;
+    int size;
+
+    /* Parse our argument array. */
+    xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
+    if (envP->fault_occurred)
+        return NULL;
+
+    size = xmlrpc_array_size(envP,myarray);
+
+    /* Alocate an operable vector*/
+    vector = (xmlrpc_double *) malloc(size*sizeof(double));
+
+    /* Fill our operable vector */
+    for (int i=0; i<size; i++){
+    	xmlrpc_array_read_item(envP, myarray, i, &Element);
+    	xmlrpc_read_double(envP, Element, &vector[i]);
+
+    	rDouble *= vector[i];
+    }
+
+    /* Return our result. */
+    return xmlrpc_build_value(envP, "d", rDouble);
 }
 //=============================================================================//
 
@@ -67,10 +255,31 @@ int
 main(int           const argc, 
      const char ** const argv) {
 
-    struct xmlrpc_method_info3 const methodInfo = {
-        /* .methodName     = */ "log_b",
-        /* .methodFunction = */ &log_b,
+    struct xmlrpc_method_info3 const methodInfoLogb = {
+        /* .methodName     = */ "logbx",
+        /* .methodFunction = */ &logbx,
     };
+    struct xmlrpc_method_info3 const methodInfoSinx = {
+        /* .methodName     = */ "sinx",
+        /* .methodFunction = */ &sinx,
+    };
+    struct xmlrpc_method_info3 const methodInfoPowx = {
+        /* .methodName     = */ "powx",
+        /* .methodFunction = */ &powx,
+    };
+    struct xmlrpc_method_info3 const methodInfoSumx = {
+        /* .methodName     = */ "sumx",
+        /* .methodFunction = */ &sumx,
+    };
+    struct xmlrpc_method_info3 const methodInfoLargerThanx = {
+        /* .methodName     = */ "largerThanx",
+        /* .methodFunction = */ &largerThanx,
+    };
+    struct xmlrpc_method_info3 const methodInfoProdx = {
+        /* .methodName     = */ "prodx",
+        /* .methodFunction = */ &prodx,
+    };
+
     xmlrpc_server_abyss_parms serverparm;
     xmlrpc_registry * registryP;
     xmlrpc_env env;
@@ -91,7 +300,12 @@ main(int           const argc,
         exit(1);
     }
 
-    xmlrpc_registry_add_method3(&env, registryP, &methodInfo);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoLogb);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoSinx);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoPowx);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoSumx);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoLargerThanx);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoProdx);
     if (env.fault_occurred) {
         printf("xmlrpc_registry_add_method3() failed.  %s\n",
                env.fault_string);
