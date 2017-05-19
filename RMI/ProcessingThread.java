@@ -1,7 +1,7 @@
 public class ProcessingThread extends Thread{
     public int id;
-    public float b;
-    public float[] subarray;
+    public byte b;
+    public byte[] subarray;
     public Op threadOp;
 
     @Override
