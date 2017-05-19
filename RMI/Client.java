@@ -8,8 +8,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Client {
     public static void main(String args[]) throws NotBoundException, MalformedURLException, RemoteException, InterruptedException{
 
-        int N=8;
-        int K=4;
+        int N=100000000;
+        int K=64;
         float[] array=new float[N];//={1,2,3,4};
         float b=2;
 
