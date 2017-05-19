@@ -59,14 +59,15 @@ main(double           const argc,
      const char ** const argv) {
 
     pthread_t threads[K];
+    xmlrpc_value * Element;
     xmlrpc_env env;
     xmlrpc_value * item;
     xmlrpc_value * log;
-//    xmlrpc_double var;
+    xmlrpc_double var;
     double number;
     srand(time(NULL));
     char * serverUrl = "http://localhost:8080/RPC2";
-    char * methodName = "prodx";
+    char * methodName = "sinx";
     struct args_t args[K];
 
     if (argc-1 > 0) {
@@ -106,6 +107,14 @@ main(double           const argc,
 
     for (int i=0; i<K; i++){
         pthread_join(threads[i], NULL);
+    }
+
+    for (int i=0; i<K; i++){
+    	for (int k=0; k<N/K; k++){
+	    	xmlrpc_array_read_item(&env, args[i].result, k, &Element);
+	        xmlrpc_read_double(&env, Element, &var);
+	        printf("%F\n", var);
+    	}
     }
 //END CLOCK
     // /* Make the remote procedure call of first type functions */

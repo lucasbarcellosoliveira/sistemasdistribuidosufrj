@@ -255,7 +255,7 @@ int
 main(int           const argc, 
      const char ** const argv) {
 
-    struct xmlrpc_method_info3 const methodInfoLogb = {
+    struct xmlrpc_method_info3 const methodInfoLogbx = {
         /* .methodName     = */ "logbx",
         /* .methodFunction = */ &logbx,
     };
@@ -300,7 +300,7 @@ main(int           const argc,
         exit(1);
     }
 
-    xmlrpc_registry_add_method3(&env, registryP, &methodInfoLogb);
+    xmlrpc_registry_add_method3(&env, registryP, &methodInfoLogbx);
     xmlrpc_registry_add_method3(&env, registryP, &methodInfoSinx);
     xmlrpc_registry_add_method3(&env, registryP, &methodInfoPowx);
     xmlrpc_registry_add_method3(&env, registryP, &methodInfoSumx);
