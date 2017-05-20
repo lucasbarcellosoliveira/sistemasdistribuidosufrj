@@ -1,7 +1,0 @@
-/* Client */
-
-gcc client.c -o client -L/usr/local/lib -lxmlrpc_client -lxmlrpc -lxmlrpc_xmlparse -lxmlrpc_xmltok -lxmlrpc_util -lpthread -L/usr/lib/x86_64-linux-gnu -lcurl
-
-/* Server */
-
-gcc server.c -o server -L/usr/local/lib -lxmlrpc_server_abyss -lxmlrpc_server -lxmlrpc_abyss -lxmlrpc -lxmlrpc_xmlparse -lxmlrpc_xmltok -lxmlrpc_util -lpthread -lm
