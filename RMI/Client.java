@@ -9,9 +9,10 @@ public class Client {
     public static void main(String args[]) throws NotBoundException, MalformedURLException, RemoteException, InterruptedException{
 
         int N=100000000;
-        int K=1;
+        int K=64;
         byte[] array=new byte[N];//={1,2,3,4};
-        byte b=2;
+        byte b=2; //b=50;
+        int ret=0;
 
         System.out.println("Starting client...");
         Op op=(Op) Naming.lookup("rmi://127.0.0.1:5000/VectorOperations");
@@ -24,13 +25,13 @@ public class Client {
         for (i=0;i<K;i++){
             threads[i]=new ProcessingThread();
             threads[i].id=i;
-            threads[i].b=b;
-            threads[i].subarray=Arrays.copyOfRange(array, i*N/K, i*N/K+N/K);
+            threads[i].b=b;	
+            threads[i].subarray=Arrays.copyOfRange(array, i*(N/K), i*(N/K)+(N/K));
             threads[i].threadOp=op;
         }
         long start, finish;
         start=System.nanoTime();
-        for (i=0;i<K;i++)
+         for (i=0;i<K;i++)
             threads[i].start();
         for (i=0;i<K;i++)
             threads[i].join();
@@ -38,9 +39,16 @@ public class Client {
         finish=System.nanoTime();
         //System.out.println("Received array: "+Arrays.toString(array));
         System.out.println("Time elapsed (ns): "+(finish-start)/K);
+
+	//Printing type-1 functions
         //byte[] ansArray=new byte[N];
         //for (i=0;i<K;i++)
-        //    System.arraycopy(threads[i].subarray, 0, ansArray, i*N/K, N/K);
+        //  System.arraycopy(threads[i].subarray, 0, ansArray, i*N/K, N/K);
         //System.out.println(Arrays.toString(ansArray));
+
+	//Printing type-2 functions
+	//for (i=0;i<K;i++)
+	//  ret+=threads[i].ret;
+	//System.out.println(ret);
     }
 }
