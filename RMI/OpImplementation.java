@@ -33,9 +33,9 @@ public class OpImplementation extends UnicastRemoteObject implements Op{
     }
 
     @Override
-    public byte sum(byte[] a) throws RemoteException {
+    public int sum(byte[] a) throws RemoteException {
         //System.out.println("Operation sum called for array "+Arrays.toString(a));
-        byte ret=0;
+        int ret=0;
         for (int i=0;i<a.length;i++)
             ret+=a[i];
         //System.out.println("Operation completed. Returning value "+ret);
@@ -43,9 +43,9 @@ public class OpImplementation extends UnicastRemoteObject implements Op{
     }
 
     @Override
-    public byte largerthan(byte[] a, byte b) throws RemoteException {
+    public int largerthan(byte[] a, byte b) throws RemoteException {
         //System.out.println("Operation largerthan called for array "+Arrays.toString(a)+" and value "+b);
-        byte ret=0;
+        int ret=0;
         for (int i=0;i<a.length;i++)
             if (a[i]>b)
                 ret+=a[i];
@@ -54,9 +54,9 @@ public class OpImplementation extends UnicastRemoteObject implements Op{
     }
 
     @Override
-    public byte prod(byte[] a) throws RemoteException {
+    public int prod(byte[] a) throws RemoteException {
         //System.out.println("Operation prod called for array "+Arrays.toString(a));
-        byte ret=1;
+        int ret=1;
         for (int i=0;i<a.length;i++)
             ret*=a[i];
         //System.out.println("Operation completed. Returning value "+ret);
