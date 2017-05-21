@@ -34,7 +34,7 @@ logbx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_value * rArray;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &b);
@@ -48,7 +48,7 @@ logbx(xmlrpc_env *   const envP,
     rArray = xmlrpc_array_new(envP);
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
@@ -73,7 +73,7 @@ sinx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_value * rArray;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
@@ -87,7 +87,7 @@ sinx(xmlrpc_env *   const envP,
     rArray = xmlrpc_array_new(envP);
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
@@ -113,7 +113,7 @@ powx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_value * rArray;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &p);
@@ -127,7 +127,7 @@ powx(xmlrpc_env *   const envP,
     rArray = xmlrpc_array_new(envP);
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
@@ -152,7 +152,7 @@ sumx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_double rDouble = 0;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
@@ -165,7 +165,7 @@ sumx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
@@ -189,7 +189,7 @@ largerThanx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_double rDouble = 0;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(Ad)", &myarray, &b);
@@ -202,7 +202,7 @@ largerThanx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
@@ -226,7 +226,7 @@ prodx(xmlrpc_env *   const envP,
     xmlrpc_value * Element;
     xmlrpc_value * item;
     xmlrpc_double rDouble = 1;
-    int size;
+    int size, i;
 
     /* Parse our argument array. */
     xmlrpc_decompose_value(envP, paramArrayP, "(A)", &myarray);
@@ -239,7 +239,7 @@ prodx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
     /* Fill our operable vector */
-    for (int i=0; i<size; i++){
+    for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
 
