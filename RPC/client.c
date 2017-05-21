@@ -82,6 +82,7 @@ main(double           const argc,
     char * serverUrl = "http://localhost:8080/RPC2";
     char * methodName = "powx";
     struct args_t args[K];
+    int i, k;
 
     if (argc-1 > 0) {
         fprintf(stderr, "This program has no arguments\n");
@@ -99,9 +100,9 @@ main(double           const argc,
            , serverUrl, methodName);
 
     /* Create random vector */    
-    for (int i=0; i<K; i++){
+    for (i=0; i<K; i++){
         args[i].myarray = xmlrpc_array_new(&env);
-        for (int k=0; k<N/K; k++){
+        for (k=0; k<N/K; k++){
             number = fRand(0,100);
             item = xmlrpc_double_new(&env, number);
             xmlrpc_array_append_item(&env, args[i].myarray, item);
@@ -117,16 +118,16 @@ main(double           const argc,
     clock_gettime(CLOCK_MONOTONIC, &startm);
     startc = clock();    
 //START CLOCK
-    for (int i=0; i<K; i++){
+    for (i=0; i<K; i++){
         pthread_create(&threads[i], NULL, rpcThread, &args[i]);
     }
 
-    for (int i=0; i<K; i++){
+    for (i=0; i<K; i++){
         pthread_join(threads[i], NULL);
     }
 
-    // for (int i=0; i<K; i++){
-    // 	for (int k=0; k<N/K; k++){
+    // for (i=0; i<K; i++){
+    // 	for (k=0; k<N/K; k++){
 	   //  	xmlrpc_array_read_item(&env, args[i].result, k, &Element);
 	   //      xmlrpc_read_double(&env, Element, &var);
 	   //      printf("%F\n", var);
@@ -146,7 +147,7 @@ main(double           const argc,
     dieIfFaultOccurred(&env);
     
     /* Get out first type functions */
-    // for (int i=0; i<10; i++){
+    // for (i=0; i<10; i++){
     //     xmlrpc_array_read_item(&env, result, i, &log);
     //     xmlrpc_read_double(&env, log, &var);
     //     dieIfFaultOccurred(&env);
@@ -158,7 +159,7 @@ main(double           const argc,
     // printf("%F\n",var);
 
     /* Dispose of our result value. */
-    for (int i=0; i<K; i++)
+    for (i=0; i<K; i++)
         xmlrpc_DECREF(args[i].result);
 
     /* Clean up our error-handling environment. */
