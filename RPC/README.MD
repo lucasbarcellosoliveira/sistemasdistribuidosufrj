@@ -5,7 +5,7 @@ sudo apt-get install libcurl4-gnutls-dev
 OR
 sudo yum install libcurl-devel.x86_64
 
-Install XML-RPC from source code provided in its official website.
+Install XML-RPC from source code provided in its official website (xmlrpc-c.sourceforge.net).
 
 Use the folowing command to compile the .c source files provided using XML-RPC:
 
