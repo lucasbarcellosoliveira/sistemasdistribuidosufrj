@@ -154,13 +154,10 @@ int main(double           const argc,
     // xmlrpc_read_double(&env, result, &var);
     // printf("%F\n",var);
 
-<<<<<<< HEAD
-=======
     /* Dispose of our result value. */
     //for (i=0; i<K; i++)
     //    xmlrpc_DECREF(args[i].result);
 
->>>>>>> 8fee49f55b5fc6d389351095d6edc2fb42586b5d
     /* Clean up our error-handling environment. */
     xmlrpc_env_clean(&env);
     
