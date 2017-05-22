@@ -9,16 +9,19 @@
 #define NAME "Xmlrpc-c Test Client"
 #define VERSION "1.0"
 
-#define N 10000
-#define K 4
+#define VECTOR_SIZE 10000000
+#define NUM_THREADS 64
+#define METHOD "powx"
 
 //=============================================================================//
+
 static double TimeSpecToSeconds(struct timespec* ts)
 {
     return (double)ts->tv_sec + (double)ts->tv_nsec / 1000000000.0;
 }
 
 //=============================================================================//
+
 struct args_t{
     xmlrpc_env env;
     xmlrpc_value * result;
@@ -29,8 +32,7 @@ struct args_t{
 
 //=============================================================================//
 
-static void
-dieIfFaultOccurred (xmlrpc_env * const envP) {
+static void dieIfFaultOccurred (xmlrpc_env * const envP) {
     if (envP->fault_occurred) {
         fprintf(stderr, "ERROR: %s (%d)\n",
                 envP->fault_string, envP->fault_code);
@@ -38,19 +40,21 @@ dieIfFaultOccurred (xmlrpc_env * const envP) {
     }
 }
 
+//=============================================================================//
+
 double fRand(double fMin, double fMax)
 {
     double f = (double)rand() / RAND_MAX;
     return fMin + f * (fMax - fMin);
 }
+
 //=============================================================================//
 
-void *
-rpcThread(void* arg){
+void *rpcThread(void* arg){
     struct args_t *args = (struct args_t *)malloc(sizeof(struct args_t));
     args = arg;
 
-    if (args->methodName == "logbx" || "sinx" || "powx"){
+    if (args->methodName == "logbx" || "largerThanx" || "powx"){
 	    /* Make the remote procedure call of first type functions */
 	    args->result = xmlrpc_client_call(&args->env, args->serverUrl, args->methodName,
 	                                 "(Ad)", (xmlrpc_value*) args->myarray, (xmlrpc_double) 2);
@@ -59,19 +63,20 @@ rpcThread(void* arg){
 	else{
 	    /* Make the remote procedure call of second type functions */
 	    args->result = xmlrpc_client_call(&args->env, args->serverUrl, args->methodName,
-	                                  "(A)", (xmlrpc_value*) args->myarray);//, (xmlrpc_double) 50);
+	                                  "(A)", (xmlrpc_value*) args->myarray);
 	}
 }
+
 //=============================================================================//
 
-int 
-main(double           const argc, 
+int main(double           const argc, 
      const char ** const argv) {
 
+    /* Initialize our variables */
 	clock_t startc, endc;
 	struct timespec startm, endm;
 	double elapsedSecondsM, elapsedSecondsC;
-    pthread_t threads[K];
+    pthread_t threads[NUM_THREADS];
     xmlrpc_value * Element;
     xmlrpc_env env;
     xmlrpc_value * item;
@@ -80,10 +85,11 @@ main(double           const argc,
     double number;
     srand(time(NULL));
     char * serverUrl = "http://localhost:8080/RPC2";
-    char * methodName = "powx";
-    struct args_t args[K];
-    int i, k;
+    char * methodName = METHOD;
+    struct args_t args[NUM_THREADS];
+    int i, k, j;
 
+    /* Verify the number of arguments */
     if (argc-1 > 0) {
         fprintf(stderr, "This program has no arguments\n");
         exit(1);
@@ -96,13 +102,12 @@ main(double           const argc,
     xmlrpc_client_init2(&env, XMLRPC_CLIENT_NO_FLAGS, NAME, VERSION, NULL, 0);
     dieIfFaultOccurred(&env);
 
-    printf("Making XMLRPC call to server url '%s' method '%s' \n"
-           , serverUrl, methodName);
+    printf("Making RPC call of %s\n", methodName);
 
     /* Create random vector */    
-    for (i=0; i<K; i++){
+    for (i=0; i<NUM_THREADS; i++){
         args[i].myarray = xmlrpc_array_new(&env);
-        for (k=0; k<N/K; k++){
+        for (k=0; k<VECTOR_SIZE/NUM_THREADS; k++){
             number = fRand(0,100);
             item = xmlrpc_double_new(&env, number);
             xmlrpc_array_append_item(&env, args[i].myarray, item);
@@ -113,36 +118,27 @@ main(double           const argc,
         args[i].methodName = methodName;
     }
 
+    printf("Executing...\n");
 
 //START CLOCK   
     clock_gettime(CLOCK_MONOTONIC, &startm);
     startc = clock();    
 //START CLOCK
-    for (i=0; i<K; i++){
+    for (i=0; i<NUM_THREADS; i++){
         pthread_create(&threads[i], NULL, rpcThread, &args[i]);
     }
-
-    for (i=0; i<K; i++){
+    for (i=0; i<NUM_THREADS; i++){
         pthread_join(threads[i], NULL);
     }
-
-    // for (i=0; i<K; i++){
-    // 	for (k=0; k<N/K; k++){
-	   //  	xmlrpc_array_read_item(&env, args[i].result, k, &Element);
-	   //      xmlrpc_read_double(&env, Element, &var);
-	   //      printf("%F\n", var);
-    // 	}
-    // }
 //END CLOCK
     clock_gettime(CLOCK_MONOTONIC, &endm);
     endc = clock();
 //END CLOCK
 
-    elapsedSecondsC = (double)(endc - startc)/CLOCKS_PER_SEC;
-    elapsedSecondsM = TimeSpecToSeconds(&endm) - TimeSpecToSeconds(&startm);
+    elapsedSecondsC = ((double)(endc - startc)/CLOCKS_PER_SEC);
+    elapsedSecondsM = (TimeSpecToSeconds(&endm) - TimeSpecToSeconds(&startm));
     printf("Time elapsed by MONOTONIC: %F\n", elapsedSecondsM);
     printf("Time elapsed by CLOCK: %F\n", elapsedSecondsC);
-
 
     dieIfFaultOccurred(&env);
     
@@ -158,10 +154,13 @@ main(double           const argc,
     // xmlrpc_read_double(&env, result, &var);
     // printf("%F\n",var);
 
+<<<<<<< HEAD
+=======
     /* Dispose of our result value. */
     //for (i=0; i<K; i++)
     //    xmlrpc_DECREF(args[i].result);
 
+>>>>>>> 8fee49f55b5fc6d389351095d6edc2fb42586b5d
     /* Clean up our error-handling environment. */
     xmlrpc_env_clean(&env);
     

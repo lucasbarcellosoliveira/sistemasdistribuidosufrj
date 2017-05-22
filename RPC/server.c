@@ -20,10 +20,11 @@
 #else
   #define SLEEP(seconds) sleep(seconds);
 #endif
+
+/* SERVER FUNCTIONS BELLOW */
 //=============================================================================//
 
-static xmlrpc_value *
-logbx(xmlrpc_env *   const envP,
+static xmlrpc_value *logbx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -47,11 +48,10 @@ logbx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
     rArray = xmlrpc_array_new(envP);
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	vector[i] = log(vector[i])/log(b);
     	item = xmlrpc_double_new(envP, vector[i]);
     	xmlrpc_array_append_item(envP, rArray, item);
@@ -60,10 +60,10 @@ logbx(xmlrpc_env *   const envP,
     /* Return our result. */
     return xmlrpc_build_value(envP, "A", rArray);
 }
+
 //=============================================================================//
 
-static xmlrpc_value *
-sinx(xmlrpc_env *   const envP,
+static xmlrpc_value *sinx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -86,11 +86,10 @@ sinx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
     rArray = xmlrpc_array_new(envP);
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	vector[i] = sin(vector[i]);
     	item = xmlrpc_double_new(envP, vector[i]);
     	xmlrpc_array_append_item(envP, rArray, item);
@@ -99,10 +98,10 @@ sinx(xmlrpc_env *   const envP,
     /* Return our result. */
     return xmlrpc_build_value(envP, "A", rArray);
 }
+
 //=============================================================================//
 
-static xmlrpc_value *
-powx(xmlrpc_env *   const envP,
+static xmlrpc_value *powx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -126,11 +125,10 @@ powx(xmlrpc_env *   const envP,
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
     rArray = xmlrpc_array_new(envP);
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	vector[i] = pow(vector[i],p);
     	item = xmlrpc_double_new(envP, vector[i]);
     	xmlrpc_array_append_item(envP, rArray, item);
@@ -139,10 +137,10 @@ powx(xmlrpc_env *   const envP,
     /* Return our result. */
     return xmlrpc_build_value(envP, "A", rArray);
 }
+
 //=============================================================================//
 
-static xmlrpc_value *
-sumx(xmlrpc_env *   const envP,
+static xmlrpc_value *sumx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -164,21 +162,20 @@ sumx(xmlrpc_env *   const envP,
     /* Alocate an operable vector*/
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	rDouble += vector[i];
     }
 
     /* Return our result. */
     return xmlrpc_build_value(envP, "d", rDouble);
 }
+
 //=============================================================================//
 
-static xmlrpc_value *
-largerThanx(xmlrpc_env *   const envP,
+static xmlrpc_value *largerThanx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -201,11 +198,10 @@ largerThanx(xmlrpc_env *   const envP,
     /* Alocate an operable vector*/
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	if (vector[i]>b)
     		rDouble ++;
     }
@@ -213,10 +209,10 @@ largerThanx(xmlrpc_env *   const envP,
     /* Return our result. */
     return xmlrpc_build_value(envP, "d", rDouble);
 }
+
 //=============================================================================//
 
-static xmlrpc_value *
-prodx(xmlrpc_env *   const envP,
+static xmlrpc_value *prodx(xmlrpc_env *   const envP,
            xmlrpc_value * const paramArrayP,
            void *         const serverInfo,
            void *         const channelInfo) {
@@ -238,21 +234,22 @@ prodx(xmlrpc_env *   const envP,
     /* Alocate an operable vector*/
     vector = (xmlrpc_double *) malloc(size*sizeof(double));
 
-    /* Fill our operable vector */
+    /* Fill and operate our operable vector */
     for (i=0; i<size; i++){
     	xmlrpc_array_read_item(envP, myarray, i, &Element);
     	xmlrpc_read_double(envP, Element, &vector[i]);
-
     	rDouble *= vector[i];
     }
 
     /* Return our result. */
     return xmlrpc_build_value(envP, "d", rDouble);
 }
+
 //=============================================================================//
 
-int 
-main(int           const argc, 
+/* SERVER CONFIG BELLOW */
+
+int main(int           const argc, 
      const char ** const argv) {
 
     struct xmlrpc_method_info3 const methodInfoLogbx = {
