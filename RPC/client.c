@@ -159,8 +159,8 @@ main(double           const argc,
     // printf("%F\n",var);
 
     /* Dispose of our result value. */
-    for (i=0; i<K; i++)
-        xmlrpc_DECREF(args[i].result);
+    //for (i=0; i<K; i++)
+    //    xmlrpc_DECREF(args[i].result);
 
     /* Clean up our error-handling environment. */
     xmlrpc_env_clean(&env);
