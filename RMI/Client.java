@@ -38,7 +38,7 @@ public class Client {
         //array=op.logb(array, b);
         finish=System.nanoTime();
         //System.out.println("Received array: "+Arrays.toString(array));
-        System.out.println("Time elapsed (ns): "+(finish-start)/K);
+        System.out.println("Time elapsed (ns): "+(finish-start));
 
 	//Printing type-1 functions
         //byte[] ansArray=new byte[N];
